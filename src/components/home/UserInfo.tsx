@@ -29,18 +29,10 @@ function UserInfo(props: UserInfoProps) {
         className="rounded-xl shadow-sm border-1 border-dotted"
       />
       <div className="flex flex-col justify-center m-2">
-        <p
-          className={classNames("text-base font-bold", {
-            ...colorBasedOnRating,
-          })}
-        >
+        <p className={classNames("text-base font-bold", colorBasedOnRating)}>
           {props.user.handle}
         </p>
-        <p
-          className={classNames("text-sm font-semibold", {
-            ...colorBasedOnRating,
-          })}
-        >
+        <p className={classNames("text-sm font-semibold", colorBasedOnRating)}>
           {props.user.rank}
         </p>
         <p className="mt-1">
@@ -48,9 +40,7 @@ function UserInfo(props: UserInfoProps) {
             {"Rating:  "}
           </span>
           <span
-            className={classNames("text-sm font-semibold", {
-              ...colorBasedOnRating,
-            })}
+            className={classNames("text-sm font-semibold", colorBasedOnRating)}
           >
             {props.user.rating ?? "Unrated"}
           </span>
@@ -60,16 +50,18 @@ function UserInfo(props: UserInfoProps) {
             {"Max:  "}
           </span>
           <span
-            className={classNames("text-sm font-semibold", {
-              ...maxcolorBasedOnRating,
-            })}
+            className={classNames(
+              "text-sm font-semibold",
+              maxcolorBasedOnRating
+            )}
           >
             {props.user.maxRating ?? "Unrated"}
           </span>
           <span
-            className={classNames("text-sm italic font-semibold", {
-              ...maxcolorBasedOnRating,
-            })}
+            className={classNames(
+              "text-sm italic font-semibold",
+              maxcolorBasedOnRating
+            )}
           >
             {` (${props.user.maxRank})`}
           </span>
