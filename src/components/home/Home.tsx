@@ -6,15 +6,21 @@ import TextInput from "../shared/inputs/TextInput";
 import { useCodeforcesInfo } from "@/src/hooks/stores/useCodeforcesInfo";
 import { FaUser, FaSearch } from "react-icons/fa";
 import IconButton from "../shared/buttons/IconButton";
+import UserInfo from "./UserInfo";
 
 const Home = () => {
   const { handle, setHandle, params, setParams } = useCodeforcesInfo();
-  const { isLoading, data: userData } = useUserInfo(params);
+  const {
+    isLoading: isUserFetchLoading,
+    data: user,
+    isError: isUserFetchError,
+    error: userFetchError,
+  } = useUserInfo(params);
 
   return (
-    <div className="bg-gray-300/10 mx-auto w-full h-screen p-10">
+    <div className="bg-slate-300/32 mx-auto w-full h-screen p-10">
       <PageHeader
-        className=" bg-gradient-to-r  from-black from-10% via-blue-500 to-blue-700 inline-block text-transparent bg-clip-text"
+        className="bg-gradient-to-r  from-black from-10% via-blue-500 to-blue-700 inline-block text-transparent bg-clip-text"
         title="Codeforces Analytics"
       />
       <form
@@ -38,6 +44,12 @@ const Home = () => {
           }
         />
       </form>
+      <UserInfo
+        isLoading={isUserFetchLoading}
+        isError={isUserFetchError}
+        user={user}
+        errorMessage={userFetchError?.message}
+      />
     </div>
   );
 };
