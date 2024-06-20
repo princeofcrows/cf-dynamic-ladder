@@ -7,6 +7,7 @@ type TextInputProps = {
   id: string;
   value?: string;
   label?: string;
+  onTextChange?: (value: string) => void;
 } & HTMLAttributes<HTMLInputElement>;
 
 export default function TextInput(props: TextInputProps) {
@@ -14,7 +15,7 @@ export default function TextInput(props: TextInputProps) {
     <Field className={twMerge("flex flex-col", props.className)}>
       <Label className="text-xs text-blue-900">{props.label}</Label>
       <Input as={Fragment}>
-        {({ focus, hover }) => (
+        {({ focus }) => (
           <input
             id={props.id}
             className={classNames(
@@ -24,6 +25,11 @@ export default function TextInput(props: TextInputProps) {
                 "border-blue-900": !focus,
               }
             )}
+            value={props.value}
+            onChange={(e) => {
+              props.onTextChange?.(e.target.value);
+              props.onChange?.(e);
+            }}
           />
         )}
       </Input>
