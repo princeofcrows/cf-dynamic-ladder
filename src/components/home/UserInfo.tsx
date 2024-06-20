@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import withStateIndicator from "../shared/higher-order/withStateIndicator";
 import { UserInfoType } from "@/src/types/users";
 import Image from "next/image";
