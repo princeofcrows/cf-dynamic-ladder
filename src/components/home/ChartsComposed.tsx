@@ -8,9 +8,28 @@ function ChartsComposed() {
   const { statusParams } = useCodeforcesInfo()
   const { data: userStatusInfo } = useUserStatus(statusParams)
 
+  const mapProblems = () => {
+    if (userStatusInfo == null) return []
+    let solvedCountDifficultyWise = []
+
+    for (let i = 800; i <= 3500; i += 100) {
+      solvedCountDifficultyWise.push({ value: 0, label: i })
+    }
+
+    userStatusInfo.forEach(u => {
+      const index = solvedCountDifficultyWise.findIndex(s => s.label === u.problem.rating)
+
+      if (index !== -1) {
+        solvedCountDifficultyWise[index].value++
+      }
+    })
+
+    return solvedCountDifficultyWise.map(({ value, label }) => ({ value, label: `${label}` }))
+  }
+
   return (
     <ContainerCard className="h-full mt-4 w-full">
-      <SingleBarChart />
+      <SingleBarChart xAxisLabel={'Difficulty rating'} yAxisLabel={'Solved count'} data={mapProblems()} />
     </ContainerCard>
   )
 }
