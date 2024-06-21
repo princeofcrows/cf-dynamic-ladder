@@ -56,7 +56,14 @@ export default function SingleBarChart(props: SingleBarChartPropType) {
           <YAxis name={props.yAxisLabel} axisLine={false} tickLine={false} dataKey={'value'} />
           <Tooltip content={<CustomTooltip xAxisLabel={props.xAxisLabel} yAxisLabel={props.yAxisLabel} />} />
           <Legend layout="vertical" verticalAlign="top" iconType="square" wrapperStyle={{ top: -4, right: 0 }} />
-          <Bar name={props.yAxisLabel} dataKey={'value'} fill={barColor} activeBar={<Rectangle fill={activeColor} />} />
+          <Bar
+            barSize={24}
+            radius={4}
+            name={props.yAxisLabel}
+            dataKey={'value'}
+            fill={barColor}
+            activeBar={<Rectangle fill={activeColor} />}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

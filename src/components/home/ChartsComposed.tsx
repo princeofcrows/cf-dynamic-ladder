@@ -3,6 +3,7 @@ import withStateIndicator from '@/src/components/shared/higher-order/withStateIn
 import { useUserStatus } from '@/src/hooks/users/useUserStatus'
 import SingleBarChart from '@/src/components/shared/charts/SingleBarChart'
 import ContainerCard from '../shared/cards/ContainerCard'
+import PageHeader from '../shared/titles/PageHeader'
 
 function ChartsComposed() {
   const { statusParams } = useCodeforcesInfo()
@@ -28,7 +29,8 @@ function ChartsComposed() {
   }
 
   return (
-    <ContainerCard className="h-full mt-4 w-full">
+    <ContainerCard className="h-full mt-4 w-full flex-col">
+      <PageHeader className="text-blue-900 mx-4 mb-2" title="Difficulty wise solved problems" />
       <SingleBarChart
         xAxisLabel={'Difficulty rating'}
         yAxisLabel={'Solved count'}
