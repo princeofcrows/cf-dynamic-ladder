@@ -1,12 +1,9 @@
 import { AxiosClient } from '@/src/helpers/api-client'
 import { UserInfoResponse } from '@/src/types/users'
 import { useQuery } from '@tanstack/react-query'
+import { UsersInfoParams } from '@/src/types/users'
 
-export type UserInfoParams = {
-  handles: string
-} | null
-
-export const useUserInfo = (params: UserInfoParams) =>
+export const useUserInfo = (params: UsersInfoParams) =>
   useQuery({
     queryKey: ['user-info', params],
     async queryFn() {

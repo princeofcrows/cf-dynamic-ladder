@@ -4,6 +4,7 @@ import withStateIndicator from '../shared/higher-order/withStateIndicator'
 import { UserInfoType } from '@/src/types/users'
 import Image from 'next/image'
 import RatingInfo from './RatingInfo'
+import ContainerCard from '../shared/cards/ContainerCard'
 
 type UserInfoProps = {
   user?: UserInfoType | null
@@ -15,7 +16,7 @@ function UserInfo(props: UserInfoProps) {
   }
 
   return (
-    <div className="flex gap-2 mt-4 bg-white shadow-sm p-6 w-fit rounded-lg">
+    <ContainerCard>
       <Image
         width={300}
         height={300}
@@ -48,7 +49,7 @@ function UserInfo(props: UserInfoProps) {
           />
         </p>
       </div>
-    </div>
+    </ContainerCard>
   )
 }
 
