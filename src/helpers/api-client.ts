@@ -1,26 +1,26 @@
-import axios from "axios";
+import axios from 'axios'
 
 const AxiosClient = axios.create({
-  baseURL: "https://codeforces.com/api/",
-});
+  baseURL: 'https://codeforces.com/api/',
+})
 
 const onRequest = async (request: any) => {
-  return request;
-};
+  return request
+}
 
 const onRequestError = (error: any) => {
-  return Promise.reject(error);
-};
+  return Promise.reject(error)
+}
 
 const onResponse = (response: any) => {
-  return response;
-};
+  return response
+}
 
 const onResponseError = async (error: any) => {
-  return Promise.reject(error);
-};
+  return Promise.reject(error)
+}
 
-AxiosClient.interceptors.request.use(onRequest, onRequestError);
-AxiosClient.interceptors.response.use(onResponse, onResponseError);
+AxiosClient.interceptors.request.use(onRequest, onRequestError)
+AxiosClient.interceptors.response.use(onResponse, onResponseError)
 
-export { AxiosClient };
+export { AxiosClient }
