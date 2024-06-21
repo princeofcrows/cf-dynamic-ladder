@@ -29,7 +29,12 @@ function ChartsComposed() {
 
   return (
     <ContainerCard className="h-full mt-4 w-full">
-      <SingleBarChart xAxisLabel={'Difficulty rating'} yAxisLabel={'Solved count'} data={mapProblems()} />
+      <SingleBarChart
+        xAxisLabel={'Difficulty rating'}
+        yAxisLabel={'Solved count'}
+        data={mapProblems()}
+        barColor={'#0f766e'}
+      />
     </ContainerCard>
   )
 }
