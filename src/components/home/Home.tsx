@@ -14,8 +14,10 @@ import ProblemTagsPieChart from './ProblemTagsPieChart'
 import ContestHistoryChart from './ContestHistoryChart'
 import PageSubheader from '../shared/titles/PageSubheader'
 import { getAxiosError } from '@/src/helpers/get-error'
+import { useHandleHistory } from '@/src/hooks/stores/useHandleHistory'
 
 const Home = () => {
+  const { append } = useHandleHistory()
   const { handle, setHandle, statusParams, infoParams, setParams } = useCodeforcesInfo()
   const {
     isLoading: isUserFetchLoading,
@@ -45,6 +47,7 @@ const Home = () => {
         onSubmit={e => {
           e.preventDefault()
           setParams()
+          append(handle)
         }}
       >
         <TextInput
