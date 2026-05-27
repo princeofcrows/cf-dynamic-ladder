@@ -15,9 +15,10 @@ export default function RatingInfo(props: RatingInfoProps) {
         'text-green-600': rating > 1199 && rating < 1399,
         'text-cyan-600': rating > 1399 && rating < 1599,
         'text-blue-600': rating > 1599 && rating < 1899,
-        'text-purple-600': rating > 1899 && rating < 2199,
-        'text-orange-600': rating > 2199 && rating < 2399,
-        'text-red-600': rating > 2399,
+        'text-purple-600': rating > 1899 && rating < 2099,
+        'text-yellow-500': rating > 2099 && rating < 2199,
+        'text-orange-500': rating > 2199 && rating < 2399,
+        'text-red-500': rating > 2399,
       })}
     >
       {props.label}

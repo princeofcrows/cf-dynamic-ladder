@@ -72,7 +72,7 @@ export const useTraineeReport = (handle: string | null) =>
   useQuery<TraineeReportType>({
     queryKey: ['trainee-report', handle],
     async queryFn() {
-      if (!handle) return null as any
+      if (!handle) return null
       const { data } = await axios.get('/api/coach', { params: { handle } })
       return data
     },

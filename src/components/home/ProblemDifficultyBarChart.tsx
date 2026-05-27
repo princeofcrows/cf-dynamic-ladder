@@ -5,7 +5,7 @@ import SingleBarChart from '@/src/components/shared/charts/SingleBarChart'
 import ContainerCard from '../shared/cards/ContainerCard'
 import PageHeader from '../shared/titles/PageHeader'
 
-function ChartsComposed() {
+function ProblemDifficultyBarChart() {
   const { statusParams } = useCodeforcesInfo()
   const { data: userStatusInfo } = useUserStatus(statusParams)
 
@@ -33,13 +33,9 @@ function ChartsComposed() {
   return (
     <ContainerCard className="h-full mt-4 w-full flex-col">
       <PageHeader className="text-blue-900 mx-4 mb-2" title="Difficulty wise solved problems" />
-      <SingleBarChart
-        xAxisLabel={'Difficulty rating'}
-        yAxisLabel={'Solved count'}
-        data={mapProblems()}
-      />
+      <SingleBarChart xAxisLabel={'Difficulty rating'} yAxisLabel={'Solved count'} data={mapProblems()} />
     </ContainerCard>
   )
 }
 
-export default withStateIndicator(ChartsComposed)
+export default withStateIndicator(ProblemDifficultyBarChart)

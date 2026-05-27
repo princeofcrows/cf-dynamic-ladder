@@ -9,9 +9,11 @@ import { useCodeforcesInfo } from '@/src/hooks/stores/useCodeforcesInfo'
 import { FaUser, FaSearch } from 'react-icons/fa'
 import IconButton from '@/src/components/shared/buttons/IconButton'
 import UserInfo from './UserInfo'
-import ChartsComposed from './ChartsComposed'
+import ProblemDifficultyBarChart from './ProblemDifficultyBarChart'
 import ProblemTagsPieChart from './ProblemTagsPieChart'
 import ContestHistoryChart from './ContestHistoryChart'
+import PageSubheader from '../shared/titles/PageSubheader'
+import { getAxiosError } from '@/src/helpers/get-error'
 
 const Home = () => {
   const { handle, setHandle, statusParams, infoParams, setParams } = useCodeforcesInfo()
@@ -38,6 +40,7 @@ const Home = () => {
         className="bg-gradient-to-r from-black from-10% via-blue-500 to-blue-700 inline-block text-transparent bg-clip-text"
         title="Codeforces Analytics"
       />
+      <PageSubheader subTitle="Powered by LLaMA 3.3 70B via Groq — free &amp; open-source" />
       <form
         onSubmit={e => {
           e.preventDefault()
@@ -65,7 +68,7 @@ const Home = () => {
 
       {isUserFetchError && (
         <div className="mt-6">
-          <UserInfo isError={true} errorMessage={userFetchError?.message} />
+          <UserInfo isError={true} errorMessage={getAxiosError(userFetchError, isUserFetchError)} />
         </div>
       )}
 
@@ -74,26 +77,32 @@ const Home = () => {
           {/* Row 1: User Profile and Problem Tags Distribution */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
             <UserInfo user={user} />
-            <ProblemTagsPieChart
-              isLoading={isUserStatusLoading}
-              isError={isUserStatusError}
-              errorMessage={userStatusError?.message}
-            />
+            <div className="h-full flex items-center justify-center">
+              <ProblemTagsPieChart
+                isLoading={isUserStatusLoading}
+                isError={isUserStatusError}
+                errorMessage={getAxiosError(userStatusError, isUserStatusError)}
+              />
+            </div>
           </div>
 
           {/* Row 2: Difficulty Bar Chart */}
-          <ChartsComposed
-            isLoading={isUserStatusLoading}
-            isError={isUserStatusError}
-            errorMessage={userStatusError?.message}
-          />
+          <div className="min-h-10">
+            <ProblemDifficultyBarChart
+              isLoading={isUserStatusLoading}
+              isError={isUserStatusError}
+              errorMessage={getAxiosError(userStatusError, isUserStatusError)}
+            />
+          </div>
 
           {/* Row 3: Contest History Line Chart */}
-          <ContestHistoryChart
-            isLoading={isUserRatingLoading}
-            isError={isUserRatingError}
-            errorMessage={userRatingError?.message}
-          />
+          <div className="min-h-10">
+            <ContestHistoryChart
+              isLoading={isUserRatingLoading}
+              isError={isUserRatingError}
+              errorMessage={getAxiosError(userStatusError, isUserStatusError)}
+            />
+          </div>
         </div>
       )}
     </div>
