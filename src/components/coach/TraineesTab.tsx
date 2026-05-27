@@ -8,11 +8,7 @@ import RatingInfo from '@/src/components/home/RatingInfo'
 import { FaUserPlus, FaTrash } from 'react-icons/fa'
 import { HiSparkles } from 'react-icons/hi'
 
-export default function TraineesTab({
-  onSelectTrainee,
-}: {
-  onSelectTrainee: (handle: string) => void
-}) {
+export default function TraineesTab({ onSelectTrainee }: { onSelectTrainee: (handle: string) => void }) {
   const [handles, setHandles] = useState<string[]>([])
   const [mounted, setMounted] = useState(false)
   const [newHandle, setNewHandle] = useState('')
@@ -23,7 +19,11 @@ export default function TraineesTab({
     setMounted(true)
     const stored = localStorage.getItem('coach-trainees')
     if (stored) {
-      try { setHandles(JSON.parse(stored)) } catch { /* ignore */ }
+      try {
+        setHandles(JSON.parse(stored))
+      } catch {
+        /* ignore */
+      }
     } else {
       // Default demo trainees
       setHandles(['tourist', 'Benq', 'ecnerwala'])
@@ -63,24 +63,26 @@ export default function TraineesTab({
     }
   }
 
-  const highestTrainee = trainees?.length
-    ? [...trainees].sort((a, b) => (b.rating || 0) - (a.rating || 0))[0] : null
-  const lowestTrainee = trainees?.length
-    ? [...trainees].sort((a, b) => (a.rating || 0) - (b.rating || 0))[0] : null
+  const highestTrainee = trainees?.length ? [...trainees].sort((a, b) => (b.rating || 0) - (a.rating || 0))[0] : null
+  const lowestTrainee = trainees?.length ? [...trainees].sort((a, b) => (a.rating || 0) - (b.rating || 0))[0] : null
   const avgRating = trainees?.length
-    ? Math.round(trainees.reduce((s, t) => s + (t.rating || 0), 0) / trainees.length) : 0
+    ? Math.round(trainees.reduce((s, t) => s + (t.rating || 0), 0) / trainees.length)
+    : 0
 
-  if (!mounted) return (
-    <div className="flex justify-center py-20">
-      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900" />
-    </div>
-  )
+  if (!mounted)
+    return (
+      <div className="flex justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900" />
+      </div>
+    )
 
   return (
     <div>
       {/* Top bar */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-        <p className="text-gray-500 text-sm">Click a trainee card to generate their AI coaching report</p>
+        <p className="text-gray-500 text-sm">
+          Click a trainee card to generate their AI coaching report (includes a 10-problem Codeforces practice pack)
+        </p>
         <form onSubmit={handleAdd} className="flex items-end gap-2">
           <div className="relative">
             <TextInput
@@ -101,9 +103,11 @@ export default function TraineesTab({
             disabled={isAdding || !newHandle.trim()}
             className="flex items-center gap-1.5 bg-blue-900 hover:bg-blue-800 disabled:bg-blue-300 text-white text-sm font-semibold px-4 py-2 rounded-full h-[40px] transition-colors"
           >
-            {isAdding
-              ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-              : <FaUserPlus className="h-4 w-4" />}
+            {isAdding ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+            ) : (
+              <FaUserPlus className="h-4 w-4" />
+            )}
             Add
           </button>
         </form>
@@ -115,30 +119,35 @@ export default function TraineesTab({
           { label: 'Trainees', value: handles.length, color: 'blue' },
           { label: 'Avg Rating', value: avgRating || '—', color: 'teal' },
         ].map(({ label, value, color }) => (
-          <ContainerCard key={label} className={`mt-0 w-full flex-col justify-center p-5 bg-gradient-to-br from-${color}-50 to-white border border-${color}-100 shadow-sm rounded-xl`}>
+          <ContainerCard
+            key={label}
+            className={`mt-0 w-full flex-col justify-center p-5 bg-gradient-to-br from-${color}-50 to-white border border-${color}-100 shadow-sm rounded-xl`}
+          >
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
             <span className={`text-3xl font-extrabold text-${color}-950 mt-1`}>{value}</span>
           </ContainerCard>
         ))}
         <ContainerCard className="mt-0 w-full flex-col justify-center p-5 bg-gradient-to-br from-purple-50 to-white border border-purple-100 shadow-sm rounded-xl">
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Highest</span>
-          {highestTrainee?.rating
-            ? <span className="font-bold mt-1 truncate text-sm flex items-center gap-1">
-                <RatingInfo label={highestTrainee.handle} rating={highestTrainee.rating} />
-                <span className="text-gray-400 font-normal text-xs">({highestTrainee.rating})</span>
-              </span>
-            : <span className="text-2xl font-extrabold text-purple-950 mt-1">—</span>
-          }
+          {highestTrainee?.rating ? (
+            <span className="font-bold mt-1 truncate text-sm flex items-center gap-1">
+              <RatingInfo label={highestTrainee.handle} rating={highestTrainee.rating} />
+              <span className="text-gray-400 font-normal text-xs">({highestTrainee.rating})</span>
+            </span>
+          ) : (
+            <span className="text-2xl font-extrabold text-purple-950 mt-1">—</span>
+          )}
         </ContainerCard>
         <ContainerCard className="mt-0 w-full flex-col justify-center p-5 bg-gradient-to-br from-orange-50 to-white border border-orange-100 shadow-sm rounded-xl">
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Lowest</span>
-          {lowestTrainee?.rating
-            ? <span className="font-bold mt-1 truncate text-sm flex items-center gap-1">
-                <RatingInfo label={lowestTrainee.handle} rating={lowestTrainee.rating} />
-                <span className="text-gray-400 font-normal text-xs">({lowestTrainee.rating})</span>
-              </span>
-            : <span className="text-2xl font-extrabold text-orange-950 mt-1">—</span>
-          }
+          {lowestTrainee?.rating ? (
+            <span className="font-bold mt-1 truncate text-sm flex items-center gap-1">
+              <RatingInfo label={lowestTrainee.handle} rating={lowestTrainee.rating} />
+              <span className="text-gray-400 font-normal text-xs">({lowestTrainee.rating})</span>
+            </span>
+          ) : (
+            <span className="text-2xl font-extrabold text-orange-950 mt-1">—</span>
+          )}
         </ContainerCard>
       </div>
 
@@ -170,7 +179,10 @@ export default function TraineesTab({
               </div>
 
               <button
-                onClick={e => { e.stopPropagation(); saveHandles(handles.filter(h => h !== trainee.handle)) }}
+                onClick={e => {
+                  e.stopPropagation()
+                  saveHandles(handles.filter(h => h !== trainee.handle))
+                }}
                 className="absolute top-3 right-3 text-gray-200 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50"
                 title="Remove"
               >
@@ -180,9 +192,12 @@ export default function TraineesTab({
               <div className="flex items-center gap-4 pr-4 mt-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={trainee.titlePhoto} alt={trainee.handle}
+                  src={trainee.titlePhoto}
+                  alt={trainee.handle}
                   className="w-14 h-14 rounded-full border-2 border-gray-100 object-cover flex-shrink-0 shadow-sm"
-                  onError={e => { (e.target as HTMLImageElement).src = 'https://userpic.codeforces.org/no-title.jpg' }}
+                  onError={e => {
+                    ;(e.target as HTMLImageElement).src = 'https://userpic.codeforces.org/no-title.jpg'
+                  }}
                 />
                 <div className="min-w-0">
                   <h3 className="text-base font-extrabold truncate">
@@ -197,9 +212,14 @@ export default function TraineesTab({
               </div>
 
               <div className="mt-4 border-t border-gray-50 pt-4 grid grid-cols-2 gap-3 text-sm">
-                {[["Rating", trainee.rating ?? 'Unrated'], ["Max", trainee.maxRating ?? 'Unrated']].map(([label, val]) => (
+                {[
+                  ['Rating', trainee.rating ?? 'Unrated'],
+                  ['Max', trainee.maxRating ?? 'Unrated'],
+                ].map(([label, val]) => (
                   <div key={label}>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-0.5">{label}</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-0.5">
+                      {label}
+                    </span>
                     <span className="font-extrabold text-gray-800 text-lg">{val}</span>
                   </div>
                 ))}
