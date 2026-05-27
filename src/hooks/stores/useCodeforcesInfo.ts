@@ -22,6 +22,7 @@ export const useCodeforcesInfo = create<CodeforcesInfo>()(
         },
         setParams: () => {
           set(state => {
+            if (!state.handle) return { infoParams: null, statusParams: null }
             return { infoParams: { handles: state.handle }, statusParams: { handle: state.handle } }
           })
         },

@@ -24,10 +24,8 @@ export default function AnalyzeTab() {
 
   const handleAnalyze = (e: FormEvent) => {
     e.preventDefault()
-    const trimmed = handle.trim()
-    if (!trimmed) return
-    append(trimmed)
     setParams()
+    append(handle)
   }
 
   const getErrorMessage = () => {
