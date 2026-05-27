@@ -2,13 +2,16 @@
 
 import { useUserInfo } from '@/src/hooks/users/useUserInfo'
 import { useUserStatus } from '@/src/hooks/users/useUserStatus'
+import { useUserRating } from '@/src/hooks/users/useUserRating'
 import PageHeader from '@/src/components/shared/titles/PageHeader'
-import TextInput from '@/src/components//shared/inputs/TextInput'
+import TextInput from '@/src/components/shared/inputs/TextInput'
 import { useCodeforcesInfo } from '@/src/hooks/stores/useCodeforcesInfo'
 import { FaUser, FaSearch } from 'react-icons/fa'
-import IconButton from '@/src/components//shared/buttons/IconButton'
+import IconButton from '@/src/components/shared/buttons/IconButton'
 import UserInfo from './UserInfo'
 import ChartsComposed from './ChartsComposed'
+import ProblemTagsPieChart from './ProblemTagsPieChart'
+import ContestHistoryChart from './ContestHistoryChart'
 
 const Home = () => {
   const { handle, setHandle, statusParams, infoParams, setParams } = useCodeforcesInfo()
@@ -23,11 +26,16 @@ const Home = () => {
     isError: isUserStatusError,
     error: userStatusError,
   } = useUserStatus(statusParams)
+  const {
+    isLoading: isUserRatingLoading,
+    isError: isUserRatingError,
+    error: userRatingError,
+  } = useUserRating(statusParams)
 
   return (
     <div className="bg-slate-300/32 mx-auto w-full min-h-screen p-10">
       <PageHeader
-        className="bg-gradient-to-r  from-black from-10% via-blue-500 to-blue-700 inline-block text-transparent bg-clip-text"
+        className="bg-gradient-to-r from-black from-10% via-blue-500 to-blue-700 inline-block text-transparent bg-clip-text"
         title="Codeforces Analytics"
       />
       <form
@@ -48,18 +56,45 @@ const Home = () => {
           }
         />
       </form>
-      <UserInfo
-        isLoading={isUserFetchLoading}
-        isError={isUserFetchError}
-        user={user}
-        errorMessage={userFetchError?.message}
-      />
-      {user != null && (
-        <ChartsComposed
-          isLoading={isUserStatusLoading}
-          isError={isUserStatusError}
-          errorMessage={userStatusError?.message}
-        />
+
+      {isUserFetchLoading && (
+        <div className="mt-6 flex justify-center">
+          <UserInfo isLoading={true} />
+        </div>
+      )}
+
+      {isUserFetchError && (
+        <div className="mt-6">
+          <UserInfo isError={true} errorMessage={userFetchError?.message} />
+        </div>
+      )}
+
+      {user != null && !isUserFetchLoading && (
+        <div className="flex flex-col gap-6 mt-6">
+          {/* Row 1: User Profile and Problem Tags Distribution */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            <UserInfo user={user} />
+            <ProblemTagsPieChart
+              isLoading={isUserStatusLoading}
+              isError={isUserStatusError}
+              errorMessage={userStatusError?.message}
+            />
+          </div>
+
+          {/* Row 2: Difficulty Bar Chart */}
+          <ChartsComposed
+            isLoading={isUserStatusLoading}
+            isError={isUserStatusError}
+            errorMessage={userStatusError?.message}
+          />
+
+          {/* Row 3: Contest History Line Chart */}
+          <ContestHistoryChart
+            isLoading={isUserRatingLoading}
+            isError={isUserRatingError}
+            errorMessage={userRatingError?.message}
+          />
+        </div>
       )}
     </div>
   )

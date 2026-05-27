@@ -58,3 +58,18 @@ export type UserStatusResponse = {
   status: 'OK'
   result: UserStatusType[]
 }
+
+export type RatingChangeType = {
+  contestId: number
+  contestName: string
+  handle: string
+  rank: number
+  ratingUpdateTimeSeconds: number
+  oldRating: number
+  newRating: number
+}
+
+export type UserRatingResponse = {
+  status: 'OK'
+  result: RatingChangeType[]
+}

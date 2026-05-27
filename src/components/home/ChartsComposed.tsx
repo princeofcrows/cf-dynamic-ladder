@@ -11,17 +11,19 @@ function ChartsComposed() {
 
   const mapProblems = () => {
     if (userStatusInfo == null) return []
-    let solvedCountDifficultyWise = []
+    let solvedCountDifficultyWise: { value: number; label: number }[] = []
 
     for (let i = 800; i <= 3500; i += 100) {
       solvedCountDifficultyWise.push({ value: 0, label: i })
     }
 
     userStatusInfo.forEach(u => {
-      const index = solvedCountDifficultyWise.findIndex(s => s.label === u.problem.rating)
+      if (u.verdict === 'OK') {
+        const index = solvedCountDifficultyWise.findIndex(s => s.label === u.problem.rating)
 
-      if (index !== -1) {
-        solvedCountDifficultyWise[index].value++
+        if (index !== -1) {
+          solvedCountDifficultyWise[index].value++
+        }
       }
     })
 
@@ -35,7 +37,6 @@ function ChartsComposed() {
         xAxisLabel={'Difficulty rating'}
         yAxisLabel={'Solved count'}
         data={mapProblems()}
-        barColor={'#0f766e'}
       />
     </ContainerCard>
   )
