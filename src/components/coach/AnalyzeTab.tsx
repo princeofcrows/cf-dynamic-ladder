@@ -1,6 +1,6 @@
 'use client'
 
-import { type FormEvent } from 'react'
+import { useEffect, type FormEvent } from 'react'
 import { useTraineeReport } from '@/src/hooks/users/useTraineeReport'
 import TextInput from '@/src/components/shared/inputs/TextInput'
 import ContainerCard from '@/src/components/shared/cards/ContainerCard'
@@ -9,15 +9,24 @@ import { HiExclamationCircle, HiSparkles } from 'react-icons/hi'
 import TraineeReport from './TraineeReport'
 import IconButton from '../shared/buttons/IconButton'
 import { useCodeforcesInfo } from '@/src/hooks/stores/useCodeforcesInfo'
+import { useHandleHistory } from '@/src/hooks/stores/useHandleHistory'
 import { isAxiosError } from 'axios'
 import Loading from '../shared/misc/Loading'
 
 export default function AnalyzeTab() {
   const { handle, setHandle, setParams, statusParams } = useCodeforcesInfo()
+  const { append } = useHandleHistory()
   const { data: report, isLoading, isError, error } = useTraineeReport(statusParams?.handle ?? '')
+
+  useEffect(() => {
+    if (handle != '') setParams()
+  }, [])
 
   const handleAnalyze = (e: FormEvent) => {
     e.preventDefault()
+    const trimmed = handle.trim()
+    if (!trimmed) return
+    append(trimmed)
     setParams()
   }
 
@@ -57,7 +66,7 @@ export default function AnalyzeTab() {
       </ContainerCard>
 
       {/* Loading */}
-      {isLoading && handle && (
+      {isLoading && statusParams?.handle && (
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <Loading />
           <div className="text-center">
@@ -70,7 +79,7 @@ export default function AnalyzeTab() {
       )}
 
       {/* Empty state */}
-      {!handle && !isLoading && (
+      {!statusParams?.handle && !isLoading && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <HiSparkles className="h-12 w-12 text-indigo-200 mb-4" />
           <p className="text-gray-500 font-semibold">Enter a handle above to generate an AI coaching report</p>
@@ -86,14 +95,7 @@ export default function AnalyzeTab() {
       )}
 
       {/* Report */}
-      {report && !isLoading && (
-        <TraineeReport
-          report={report}
-          onBack={() => {
-            setHandle('')
-          }}
-        />
-      )}
+      {report && !isLoading && statusParams != null && <TraineeReport report={report} />}
     </div>
   )
 }

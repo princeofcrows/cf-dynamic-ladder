@@ -6,17 +6,19 @@ import { HiOutlineSearch, HiUsers } from 'react-icons/hi'
 import AnalyzeTab from './AnalyzeTab'
 import TraineesTab from './TraineesTab'
 import PageSubheader from '../shared/titles/PageSubheader'
+import { useCodeforcesInfo } from '@/src/hooks/stores/useCodeforcesInfo'
 
 type Tab = 'trainees' | 'analyze'
 
 export default function CoachDashboard() {
   const [tab, setTab] = useState<Tab>('trainees')
-  const [analyzeHandle, setAnalyzeHandle] = useState<string | null>(null)
+  const { setHandle } = useCodeforcesInfo()
 
-  const switchToAnalyze = useCallback((handle: string) => {
-    setAnalyzeHandle(handle)
+  const switchToAnalyze = (handle: string) => {
+    console.log(handle)
+    setHandle(handle)
     setTab('analyze')
-  }, [])
+  }
 
   const tabs = [
     { id: 'trainees' as Tab, label: 'My Trainees', icon: HiUsers },
@@ -41,7 +43,6 @@ export default function CoachDashboard() {
             key={t.id}
             onClick={() => {
               setTab(t.id)
-              if (t.id === 'analyze') setAnalyzeHandle(null)
             }}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
               tab === t.id ? 'bg-white text-blue-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'

@@ -16,21 +16,13 @@ type PracticeProblem = {
   reason: string
 }
 
-export default function TraineeReport({ report, onBack }: { report: TraineeReportType; onBack: () => void }) {
+export default function TraineeReport({ report }: { report: TraineeReportType }) {
   const solveRate = report.totalAttempts > 0 ? Math.round((report.totalSolved / report.totalAttempts) * 100) : 0
 
   const practiceProblems = ((report.ai as any)?.practiceProblems ?? []) as PracticeProblem[]
 
   return (
     <div className="flex flex-col gap-6">
-      <button
-        onClick={onBack}
-        className="flex items-center gap-2 text-blue-900 hover:text-blue-700 font-semibold transition-colors w-fit"
-      >
-        <FaArrowLeft className="h-3.5 w-3.5" />
-        Back
-      </button>
-
       {/* Profile Header */}
       <ContainerCard className="mt-0 w-full p-6 flex-col md:flex-row items-center gap-6 bg-white border border-gray-100 shadow-sm rounded-xl">
         {/* eslint-disable-next-line @next/next/no-img-element */}

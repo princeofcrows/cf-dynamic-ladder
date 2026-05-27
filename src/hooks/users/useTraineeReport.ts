@@ -77,7 +77,7 @@ export const useTraineeReport = (handle: string | null) =>
       return data
     },
     enabled: !!handle,
-    staleTime: 5 * 60 * 1000, // cache for 5 mins — AI calls are expensive
+    staleTime: 20 * 60 * 1000, // cache for 20 mins — AI calls are expensive
   })
 
 // ─── Hook: Raw follow/stats report ────────────────────────────────────────────

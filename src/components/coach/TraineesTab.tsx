@@ -1,15 +1,16 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useTraineesInfo } from '@/src/hooks/users/useTraineesInfo'
 import TextInput from '@/src/components/shared/inputs/TextInput'
 import ContainerCard from '@/src/components/shared/cards/ContainerCard'
 import RatingInfo from '@/src/components/home/RatingInfo'
 import { FaUserPlus, FaTrash } from 'react-icons/fa'
 import { HiSparkles } from 'react-icons/hi'
+import { useHandleHistory } from '@/src/hooks/stores/useHandleHistory'
 
 export default function TraineesTab({ onSelectTrainee }: { onSelectTrainee: (handle: string) => void }) {
-  const [handles, setHandles] = useState<string[]>([])
+  const { handles, append, remove } = useHandleHistory()
   const [mounted, setMounted] = useState(false)
   const [newHandle, setNewHandle] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
@@ -17,51 +18,14 @@ export default function TraineesTab({ onSelectTrainee }: { onSelectTrainee: (han
 
   useEffect(() => {
     setMounted(true)
-    const stored = localStorage.getItem('coach-trainees')
-    if (stored) {
-      try {
-        setHandles(JSON.parse(stored))
-      } catch {
-        /* ignore */
-      }
-    } else {
-      // Default demo trainees
-      setHandles(['tourist', 'Benq', 'ecnerwala'])
-    }
-  }, [])
+    // Seed demo handles only if history is empty (first run)
+    // if (!handles || handles.length === 0) {
+    //   ;['tourist', 'Benq', 'ecnerwala'].forEach(h => append(h))
+    // }
+  }, [append, handles])
 
-  const saveHandles = (next: string[]) => {
-    setHandles(next)
-    localStorage.setItem('coach-trainees', JSON.stringify(next))
-  }
-
-  const { data: trainees, isLoading, isError } = useTraineesInfo(handles)
-
-  const handleAdd = async (e: FormEvent) => {
-    e.preventDefault()
-    const trimmed = newHandle.trim()
-    if (!trimmed) return
-    if (handles.some(h => h.toLowerCase() === trimmed.toLowerCase())) {
-      setErrorMsg('Already tracked.')
-      return
-    }
-    setIsAdding(true)
-    setErrorMsg('')
-    try {
-      const res = await fetch(`https://codeforces.com/api/user.info?handles=${trimmed}`)
-      const data = await res.json()
-      if (data.status === 'OK' && data.result?.length > 0) {
-        saveHandles([...handles, data.result[0].handle])
-        setNewHandle('')
-      } else {
-        setErrorMsg(`"${trimmed}" not found on Codeforces.`)
-      }
-    } catch {
-      setErrorMsg('Failed to validate. Check your connection.')
-    } finally {
-      setIsAdding(false)
-    }
-  }
+  const handlesMemo = useMemo(() => Array.from(new Set(handles)), [handles])
+  const { data: trainees, isLoading, isError } = useTraineesInfo(handlesMemo)
 
   const highestTrainee = trainees?.length ? [...trainees].sort((a, b) => (b.rating || 0) - (a.rating || 0))[0] : null
   const lowestTrainee = trainees?.length ? [...trainees].sort((a, b) => (a.rating || 0) - (b.rating || 0))[0] : null
@@ -83,40 +47,12 @@ export default function TraineesTab({ onSelectTrainee }: { onSelectTrainee: (han
         <p className="text-gray-500 text-sm">
           Click a trainee card to generate their AI coaching report (includes a 10-problem Codeforces practice pack)
         </p>
-        <form onSubmit={handleAdd} className="flex items-end gap-2">
-          <div className="relative">
-            <TextInput
-              id="trainee-handle"
-              className="w-60"
-              label="Add Trainee"
-              value={newHandle}
-              onTextChange={setNewHandle}
-              placeholder="CF Handle"
-              disabled={isAdding}
-            />
-            {errorMsg && (
-              <p className="text-red-500 text-xs absolute top-full left-0 mt-1 whitespace-nowrap">{errorMsg}</p>
-            )}
-          </div>
-          <button
-            type="submit"
-            disabled={isAdding || !newHandle.trim()}
-            className="flex items-center gap-1.5 bg-blue-900 hover:bg-blue-800 disabled:bg-blue-300 text-white text-sm font-semibold px-4 py-2 rounded-full h-[40px] transition-colors"
-          >
-            {isAdding ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-            ) : (
-              <FaUserPlus className="h-4 w-4" />
-            )}
-            Add
-          </button>
-        </form>
       </div>
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Trainees', value: handles.length, color: 'blue' },
+          { label: 'Trainees', value: handlesMemo.length, color: 'blue' },
           { label: 'Avg Rating', value: avgRating || '—', color: 'teal' },
         ].map(({ label, value, color }) => (
           <ContainerCard
@@ -181,7 +117,7 @@ export default function TraineesTab({ onSelectTrainee }: { onSelectTrainee: (han
               <button
                 onClick={e => {
                   e.stopPropagation()
-                  saveHandles(handles.filter(h => h !== trainee.handle))
+                  remove(trainee.handle)
                 }}
                 className="absolute top-3 right-3 text-gray-200 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50"
                 title="Remove"
