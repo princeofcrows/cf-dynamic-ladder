@@ -43,6 +43,13 @@ const Home = () => {
         title="Codeforces Analytics"
       />
       <PageSubheader subTitle="Powered by LLaMA 3.3 70B via Groq — free &amp; open-source" />
+
+      <p className="mt-2 text-sm text-gray-500">Type in a Codeforces handle to get started.</p>
+      <p className="mt-1 text-xs text-gray-400">
+        Example: <span className="font-semibold text-gray-500">tourist</span>,{' '}
+        <span className="font-semibold text-gray-500">Benq</span>
+      </p>
+
       <form
         onSubmit={e => {
           e.preventDefault()
