@@ -65,7 +65,13 @@ const Home = () => {
           onTextChange={value => setHandle(value)}
           iconLeft={<FaUser />}
           iconRight={
-            <IconButton onClick={() => setParams()} icon={<FaSearch className="text-blue-900 hover:text-blue-800" />} />
+            <IconButton
+              onClick={() => {
+                setParams()
+                append(handle)
+              }}
+              icon={<FaSearch className="text-blue-900 hover:text-blue-800" />}
+            />
           }
         />
       </form>
