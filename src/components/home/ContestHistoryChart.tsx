@@ -1,14 +1,7 @@
-import React from 'react'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-} from 'recharts'
+'use client'
+
+import React, { useEffect, useMemo, useState } from 'react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import { useCodeforcesInfo } from '@/src/hooks/stores/useCodeforcesInfo'
 import { useUserRating } from '@/src/hooks/users/useUserRating'
 import ContainerCard from '../shared/cards/ContainerCard'
@@ -54,17 +47,35 @@ function ContestHistoryChart() {
     )
   }
 
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 639px)')
+    const onChange = () => setIsMobile(mql.matches)
+    onChange()
+    mql.addEventListener?.('change', onChange)
+    return () => mql.removeEventListener?.('change', onChange)
+  }, [])
+
   // Format data for Recharts
-  const data = ratingHistory.map((change) => ({
-    ...change,
-    date: new Date(change.ratingUpdateTimeSeconds * 1000).toLocaleDateString(),
-  }))
+  const data = useMemo(
+    () =>
+      ratingHistory.map(change => ({
+        ...change,
+        date: new Date(change.ratingUpdateTimeSeconds * 1000).toLocaleDateString(),
+      })),
+    [ratingHistory]
+  )
 
   // Find min and max ratings to adjust Y-axis scale
-  const ratings = ratingHistory.map((r) => r.newRating)
+  const ratings = ratingHistory.map(r => r.newRating)
   const minRating = Math.min(...ratings)
   const maxRating = Math.max(...ratings)
   const yDomain = [Math.max(0, minRating - 100), maxRating + 100]
+
+  const desiredXTicks = isMobile ? 4 : 8
+  // Recharts interval: 0 shows all; 1 shows every 2nd; so subtract 1
+  const interval = Math.max(0, Math.ceil(data.length / desiredXTicks) - 1)
 
   return (
     <ContainerCard className="h-full mt-4 w-full flex-col">
@@ -93,8 +104,8 @@ function ContestHistoryChart() {
               axisLine={false}
               tick={{ fill: '#64748b', fontSize: 10 }}
               dy={10}
-              // Show fewer ticks for readability
-              interval={Math.ceil(data.length / 10)}
+              minTickGap={24}
+              interval={interval}
             />
             <YAxis
               domain={yDomain}

@@ -37,7 +37,7 @@ const Home = () => {
   } = useUserRating(statusParams)
 
   return (
-    <div className="bg-slate-300/32 mx-auto w-full min-h-screen p-10">
+    <div className="bg-slate-300/32 mx-auto w-full min-h-screen px-4 py-6 sm:px-6 lg:p-10">
       <PageHeader
         className="bg-gradient-to-r from-black from-10% via-blue-500 to-blue-700 inline-block text-transparent bg-clip-text"
         title="Codeforces Analytics"
@@ -52,7 +52,7 @@ const Home = () => {
       >
         <TextInput
           id="cf-handle"
-          className="mt-2 w-1/3"
+          className="mt-4 w-full sm:w-2/3 lg:w-1/3"
           label="Codeforces Handle"
           value={handle}
           onTextChange={value => setHandle(value)}

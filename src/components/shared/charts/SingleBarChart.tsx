@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { TooltipProps } from 'recharts'
 
@@ -36,19 +38,29 @@ const CustomTooltip = (
 
 export default function SingleBarChart(props: SingleBarChartPropType) {
   const { barColor = '#2563eb', activeColor = '#1d4ed8' } = props
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 639px)')
+    const onChange = () => setIsMobile(mql.matches)
+    onChange()
+    mql.addEventListener?.('change', onChange)
+    return () => mql.removeEventListener?.('change', onChange)
+  }, [])
 
   return (
-    <div className="w-full h-[400px] mt-2">
-      <ResponsiveContainer width="99%" height="100%">
+    <div className="w-full h-[420px] sm:h-[400px] mt-2">
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart
           width={500}
           height={400}
           data={props.data}
           margin={{
-            top: 15,
-            right: 20,
-            left: 10,
-            bottom: 15,
+            top: 10,
+            right: isMobile ? 8 : 20,
+            left: isMobile ? 0 : 10,
+            // Extra bottom space on mobile for the legend
+            bottom: isMobile ? 48 : 15,
           }}
         >
           <defs>
@@ -75,14 +87,14 @@ export default function SingleBarChart(props: SingleBarChartPropType) {
           />
           <Tooltip content={<CustomTooltip xAxisLabel={props.xAxisLabel} yAxisLabel={props.yAxisLabel} />} />
           <Legend
-            layout="vertical"
-            verticalAlign="top"
-            align="right"
+            layout={isMobile ? 'horizontal' : 'vertical'}
+            verticalAlign={isMobile ? 'bottom' : 'top'}
+            align={isMobile ? 'center' : 'right'}
             iconType="circle"
-            wrapperStyle={{ top: -10, right: 10 }}
+            wrapperStyle={isMobile ? { paddingTop: '10px' } : { top: -10, right: 10 }}
           />
           <Bar
-            barSize={20}
+            barSize={isMobile ? 26 : 20}
             radius={[4, 4, 0, 0]}
             name={props.yAxisLabel}
             dataKey={'value'}

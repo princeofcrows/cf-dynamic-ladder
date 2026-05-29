@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import { useEffect, useState } from 'react'
 import { PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 type DataType = {
@@ -37,32 +39,45 @@ const CustomTooltip = ({ active, payload }: any) => {
 }
 
 export default function PieChart({ data, colors = COLORS }: PieChartPropType) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Tailwind "sm" breakpoint is 640px
+    const mql = window.matchMedia('(max-width: 639px)')
+    const onChange = () => setIsMobile(mql.matches)
+    onChange()
+    mql.addEventListener?.('change', onChange)
+    return () => mql.removeEventListener?.('change', onChange)
+  }, [])
+
   return (
-    <div className="w-full h-[400px]">
+    <div className="w-full h-[420px] sm:h-[400px]">
       <ResponsiveContainer width="99%" height="100%">
         <RechartsPieChart>
           <Pie
             data={data}
             cx="50%"
-            cy="50%"
+            cy={isMobile ? '42%' : '50%'}
             labelLine={false}
-            outerRadius={120}
+            outerRadius={isMobile ? 95 : 120}
             fill="#8884d8"
             dataKey="value"
             animationBegin={0}
             animationDuration={1500}
           >
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />
+
+          {/* On mobile: legend below chart for readability */}
           <Legend
-            layout="vertical"
-            verticalAlign="middle"
-            align="right"
+            layout={isMobile ? 'horizontal' : 'vertical'}
+            verticalAlign={isMobile ? 'bottom' : 'middle'}
+            align={isMobile ? 'center' : 'right'}
             iconType="circle"
-            wrapperStyle={{ paddingLeft: '20px' }}
+            wrapperStyle={isMobile ? { paddingTop: '8px' } : { paddingLeft: '20px' }}
           />
         </RechartsPieChart>
       </ResponsiveContainer>

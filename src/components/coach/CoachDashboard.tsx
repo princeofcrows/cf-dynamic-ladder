@@ -26,7 +26,7 @@ export default function CoachDashboard() {
   ]
 
   return (
-    <div className="bg-slate-300/32 mx-auto w-full min-h-screen p-10">
+    <div className="bg-slate-300/32 mx-auto w-full min-h-screen px-4 py-6 sm:px-6 lg:p-10">
       {/* Page header */}
       <div className="mb-8">
         <PageHeader
@@ -37,7 +37,7 @@ export default function CoachDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit mb-8">
+      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-full sm:w-fit mb-6 overflow-x-auto">
         {tabs.map(t => (
           <button
             key={t.id}

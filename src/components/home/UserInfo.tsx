@@ -16,8 +16,8 @@ function UserInfo(props: UserInfoProps) {
   }
 
   return (
-    <ContainerCard className="h-full mt-4 w-full flex-row items-center gap-6 p-6">
-      <div className="relative w-32 h-32 md:w-48 md:h-48 flex-shrink-0">
+    <ContainerCard className="h-full mt-4 w-full flex-col sm:flex-row items-center gap-5 sm:gap-6 p-5 sm:p-6">
+      <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-48 lg:h-48 flex-shrink-0">
         <Image
           fill
           src={props.user.titlePhoto}
@@ -25,15 +25,15 @@ function UserInfo(props: UserInfoProps) {
           className="rounded-xl shadow-md border border-gray-200 object-cover"
         />
       </div>
-      <div className="flex flex-col justify-center gap-1.5 py-2">
+      <div className="flex flex-col justify-center gap-1.5 py-1 sm:py-2 text-center sm:text-left">
         <h2 className="text-2xl font-bold text-gray-800 leading-tight">
           <RatingInfo label={props.user.handle} rating={props.user.rating} />
         </h2>
         <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
           <RatingInfo label={props.user.rank} rating={props.user.rating} />
         </p>
-        <div className="mt-3 space-y-1">
-          <p className="flex items-center text-sm">
+        <div className="mt-3 space-y-1 w-full">
+          <p className="flex items-center justify-between sm:justify-start gap-4 text-sm">
             <span className="w-20 font-medium text-gray-500">Rating</span>
             <RatingInfo
               label={props.user.rating ?? 'Unrated'}
@@ -41,7 +41,7 @@ function UserInfo(props: UserInfoProps) {
               className="font-bold text-base"
             />
           </p>
-          <p className="flex items-center text-sm">
+          <p className="flex items-center justify-between sm:justify-start gap-4 text-sm">
             <span className="w-20 font-medium text-gray-500">Max Rating</span>
             <span className="inline-flex gap-1.5 items-baseline">
               <RatingInfo
